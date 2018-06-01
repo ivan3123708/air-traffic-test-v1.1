@@ -14,8 +14,9 @@ window.onload = () => {
       dataType: 'jsonp',
       success: (data) => {
         const container = document.getElementById('container');
+        const list = data.acList.sort((a, b) => a.Alt < b.Alt);
 
-        data.acList.forEach((aircraft) => {
+        list.forEach((aircraft) => {
           const listingItem = document.createElement('div');
           listingItem.setAttribute('id', 'listing-item');
           listingItem.setAttribute('title', 'Click to show more');
