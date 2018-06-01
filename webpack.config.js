@@ -30,5 +30,10 @@ module.exports = {
       }
     ]
   },
-  plugins: [index]
+  plugins: [index],
+  devtool: 'source-map',
+  devServer: {
+    contentBase: path.join(__dirname, 'public'),
+    publicPath: '/build',
+  },
 }
