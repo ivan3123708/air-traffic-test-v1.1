@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import numeral from 'numeral';
 import '../styles/index.sass';
 
 window.onload = () => {
@@ -17,6 +18,7 @@ window.onload = () => {
         data.acList.forEach((aircraft) => {
           const listingItem = document.createElement('div');
           listingItem.setAttribute('id', 'listing-item');
+          listingItem.setAttribute('title', 'Click to show more');
 
           const icon = document.createElement('img');
           icon.setAttribute('id', 'icon');
@@ -24,11 +26,11 @@ window.onload = () => {
 
           const altitude = document.createElement('p');
           altitude.setAttribute('id', 'altitude');
-          altitude.innerHTML = aircraft.Alt;
+          altitude.innerHTML = `Altitude: <b>${numeral(aircraft.Alt).format('0,0')} ft</b>`;
 
           const flightCode = document.createElement('p');
-          flightCode.setAttribute('id', 'fligth-code');
-          flightCode.innerHTML = aircraft.Call;
+          flightCode.setAttribute('id', 'flight-code');
+          flightCode.innerHTML = `Flight Code: <b>${aircraft.Call}</b>`;
 
           listingItem.appendChild(icon);
           listingItem.appendChild(altitude);
