@@ -7,7 +7,7 @@ module.exports = {
   entry: './src/js/index.js',
   output: {
     path: path.join(__dirname, 'public/build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     rules: [
@@ -18,8 +18,8 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['env'],
-          }
-        }
+          },
+        },
       },
       {
         test: /index.sass/,
@@ -27,8 +27,12 @@ module.exports = {
           fallback: 'style-loader',
           use: ['css-loader', 'sass-loader'],
         }),
-      }
-    ]
+      },
+      {
+        test: /\.(png|jpg)$/,
+        loader: 'url-loader',
+      },
+    ],
   },
   plugins: [index],
   devtool: 'source-map',
@@ -36,4 +40,4 @@ module.exports = {
     contentBase: path.join(__dirname, 'public'),
     publicPath: '/build',
   },
-}
+};

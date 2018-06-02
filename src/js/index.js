@@ -8,6 +8,9 @@ window.onload = () => {
   const errorDiv = document.getElementById('error');
   const modal = document.getElementById('modal');
   const logo = document.getElementById('logo');
+  logo.onerror = () => {
+    logo.setAttribute('src', 'img/no_image.png');
+  };
   const model = document.getElementById('model');
   const from = document.getElementById('from');
   const to = document.getElementById('to');
@@ -86,7 +89,7 @@ window.onload = () => {
 
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        errorDiv.innerHTML = '<h3>ERROR</h3> User denied the request for Geolocation.';
+        errorDiv.innerHTML = '<h3>ERROR</h3> You must allow Geolocation in order to use the app.';
         return;
       case error.POSITION_UNAVAILABLE:
         errorDiv.innerHTML = '<h3>ERROR</h3> Location information is unavailable.';
@@ -105,6 +108,6 @@ window.onload = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(handlePosition, handleError);
   } else {
-    errorDiv.innerHTML = 'Your browser doesn\'t support geolocation';
+    errorDiv.innerHTML = 'Your browser doesn\'t support Geolocation';
   }
 };
