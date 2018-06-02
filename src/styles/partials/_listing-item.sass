@@ -1,6 +1,7 @@
 #listing-item
   display: grid
   grid-template-columns: 24% 38% 38%
+  column-gap: 5px
   width: 100%
   margin: 10px auto
   background-color: $white
@@ -8,15 +9,28 @@
   cursor: pointer
   transition: all .3s
 
+  @media (max-width: 475px)
+    grid-template-columns: 20% 35% 35%
+
   &:hover
     background-color: $white-hover
     transform: scale(1.05, 1.05)
+
+    @media (max-width: 700px)
+      transform: none
 
   p
     height: 22px
     font-size: 20px
     color: $text
 
+    @media (max-width: 700px)
+      font-size: 16px
+
   #icon
     max-width: 50px
     margin: 5px 30px
+
+    @media (max-width: 700px)
+      max-width: 30px
+      margin: 15px

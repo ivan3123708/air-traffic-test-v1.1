@@ -59,7 +59,7 @@ window.onload = () => {
 
           const altitude = document.createElement('p');
           altitude.setAttribute('id', 'altitude');
-          altitude.innerHTML = `Altitude: <b>${numeral(aircraft.Alt).format('0,0') || 'N/A'} ft</b>`;
+          altitude.innerHTML = `Altitude: <b>${numeral(aircraft.Alt).format('0,0')}ft</b>`;
 
           const flightCode = document.createElement('p');
           flightCode.setAttribute('id', 'flight-code');
