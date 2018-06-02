@@ -4,6 +4,7 @@ import '../styles/index.sass';
 
 window.onload = () => {
   const container = document.getElementById('container');
+  const errorDiv = document.getElementById('error');
   const shadow = document.getElementById('shadow');
   const modal = document.getElementById('modal');
   const logo = document.getElementById('logo');
@@ -19,6 +20,8 @@ window.onload = () => {
   };
 
   function handlePosition(position) {
+    errorDiv.style.display = 'none';
+
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
     const url = `https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?lat=${lat}&lng=${lng}&fDstL=0&fDstU=100`;
@@ -31,7 +34,6 @@ window.onload = () => {
         const list = data.acList.sort((a, b) => {
           if (a.Alt < b.Alt) return 1;
           else if (a.Alt > b.Alt) return -1;
-
           return 0;
         });
 
@@ -74,23 +76,28 @@ window.onload = () => {
   }
 
   function handleError(error) {
+    errorDiv.style.display = 'block';
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        return 'User denied the request for Geolocation.';
+        errorDiv.innerHTML = '<h3>ERROR</h3> User denied the request for Geolocation.';
+        return;
       case error.POSITION_UNAVAILABLE:
-        return 'Location information is unavailable.';
+        errorDiv.innerHTML = '<h3>ERROR</h3> Location information is unavailable.';
+        return;
       case error.TIMEOUT:
-        return 'The request to get user location timed out.';
+        errorDiv.innerHTML = '<h3>ERROR</h3> The request to get user location timed out.';
+        return;
       case error.UNKNOWN_ERROR:
-        return 'An unknown error occurred.';
+        errorDiv.innerHTML = '<h3>ERROR</h3> An unknown error occurred.';
+        return;
       default:
-        return 'Error';
+        errorDiv.innerHTML = '<h3>ERROR</h3> Error';
     }
   }
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(handlePosition, handleError);
   } else {
-    return 'Your browser doesn\'t support geolocation';
+    errorDiv.innerHTML = 'Your browser doesn\'t support geolocation';
   }
 };
