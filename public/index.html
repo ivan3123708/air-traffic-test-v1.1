@@ -8,8 +8,23 @@
     <link rel="stylesheet" type="text/css" media="screen" href="build/index.css" />
   </head>
   <body>
+    <div id="shadow" class="shadow-off"></div>
     <div id="container">
       <h1>Air Traffic</h1>
+      <div id="modal" class="modal-closed">
+        <div id="box">
+          <div id="image-div">
+            <img id="logo"/>
+          </div>
+          <p id="model"></p>
+          <div id="direction">
+            <p id="from"></p>
+            <img id="direction-icon" src="img/icon_right.png"/>
+            <p id="to"></p>
+          </div>
+          <button id="modal-close">CLOSE</button>
+        </div>
+      </div>
     </div>
     <script src="build/bundle.js"></script>
   </body>
