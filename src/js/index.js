@@ -3,9 +3,9 @@ import numeral from 'numeral';
 import '../styles/index.sass';
 
 window.onload = () => {
-  const container = document.getElementById('container');
-  const errorDiv = document.getElementById('error');
+  const listDiv = document.getElementById('list');
   const shadow = document.getElementById('shadow');
+  const errorDiv = document.getElementById('error');
   const modal = document.getElementById('modal');
   const logo = document.getElementById('logo');
   const model = document.getElementById('model');
@@ -21,62 +21,69 @@ window.onload = () => {
 
   function handlePosition(position) {
     errorDiv.style.display = 'none';
-
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
     const url = `https://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?lat=${lat}&lng=${lng}&fDstL=0&fDstU=100`;
 
-    $.ajax({
-      method: 'GET',
-      url,
-      dataType: 'jsonp',
-      success: (data) => {
-        const list = data.acList.sort((a, b) => {
-          if (a.Alt < b.Alt) return 1;
-          else if (a.Alt > b.Alt) return -1;
-          return 0;
-        });
+    const fetchData = () => {
+      $.ajax({
+        method: 'GET',
+        url,
+        dataType: 'jsonp',
+        success: (data) => {
+          listDiv.innerHTML = '';
 
-        list.forEach((aircraft) => {
-          const listingItem = document.createElement('div');
-          listingItem.setAttribute('id', 'listing-item');
-          listingItem.setAttribute('title', 'Click to show more');
-          listingItem.onclick = () => {
-            modal.classList.remove('modal-closed');
-            modal.classList.add('modal-open');
-            shadow.classList.remove('shadow-off');
-            shadow.classList.add('shadow-on');
+          const list = data.acList.sort((a, b) => {
+            if (a.Alt < b.Alt) return 1;
+            else if (a.Alt > b.Alt) return -1;
+            return 0;
+          });
 
-            model.innerHTML = aircraft.Mdl || 'N/A';
-            logo.setAttribute('src', `https://logo.clearbit.com/${aircraft.Op.toLowerCase().replace(/\s/g, '')}.com`);
-            from.innerHTML = `<b>DEPARTURE</b><br><br>${aircraft.From || 'N/A'}`;
-            to.innerHTML = `<b>ARRIVAL</b><br><br>${aircraft.To || 'N/A'}`;
-          };
+          list.forEach((aircraft) => {
+            const listingItem = document.createElement('div');
+            listingItem.setAttribute('id', 'listing-item');
+            listingItem.setAttribute('title', 'Click to show more');
+            listingItem.onclick = () => {
+              modal.classList.remove('modal-closed');
+              modal.classList.add('modal-open');
+              shadow.classList.remove('shadow-off');
+              shadow.classList.add('shadow-on');
 
-          const icon = document.createElement('img');
-          icon.setAttribute('id', 'icon');
-          icon.setAttribute('src', aircraft.Trak < 180 ? 'img/icon_right.png' : 'img/icon_left.png');
+              model.innerHTML = aircraft.Mdl || 'N/A';
+              logo.setAttribute('src', `https://logo.clearbit.com/${aircraft.Op.toLowerCase().replace(/\s/g, '')}.com`);
+              from.innerHTML = `<b>DEPARTURE</b><br><br>${aircraft.From || 'N/A'}`;
+              to.innerHTML = `<b>ARRIVAL</b><br><br>${aircraft.To || 'N/A'}`;
+            };
 
-          const altitude = document.createElement('p');
-          altitude.setAttribute('id', 'altitude');
-          altitude.innerHTML = `Altitude: <b>${numeral(aircraft.Alt).format('0,0')}ft</b>`;
+            const icon = document.createElement('img');
+            icon.setAttribute('id', 'icon');
+            icon.setAttribute('src', aircraft.Trak < 180 ? 'img/icon_right.png' : 'img/icon_left.png');
 
-          const flightCode = document.createElement('p');
-          flightCode.setAttribute('id', 'flight-code');
-          flightCode.innerHTML = `Flight Code: <b>${aircraft.Call || 'N/A'}</b>`;
+            const altitude = document.createElement('p');
+            altitude.setAttribute('id', 'altitude');
+            altitude.innerHTML = `Altitude: <b>${numeral(aircraft.Alt).format('0,0')}ft</b>`;
 
-          listingItem.appendChild(icon);
-          listingItem.appendChild(altitude);
-          listingItem.appendChild(flightCode);
+            const flightCode = document.createElement('p');
+            flightCode.setAttribute('id', 'flight-code');
+            flightCode.innerHTML = `Flight Code: <b>${aircraft.Call || 'N/A'}</b>`;
 
-          container.appendChild(listingItem);
-        });
-      },
-    });
+            listingItem.appendChild(icon);
+            listingItem.appendChild(altitude);
+            listingItem.appendChild(flightCode);
+
+            listDiv.appendChild(listingItem);
+          });
+        },
+      });
+    };
+
+    fetchData();
+    setInterval(fetchData, 1000 * 60);
   }
 
   function handleError(error) {
     errorDiv.style.display = 'block';
+
     switch (error.code) {
       case error.PERMISSION_DENIED:
         errorDiv.innerHTML = '<h3>ERROR</h3> User denied the request for Geolocation.';
